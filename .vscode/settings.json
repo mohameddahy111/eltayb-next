@@ -1,0 +1,6 @@
+{
+  "javascript.suggest.completeFunctionCalls": true,
+  "python.autoComplete.extraPaths": [
+    
+  ]
+}

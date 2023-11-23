@@ -1,0 +1,48 @@
+
+.min_card {
+  position: relative;
+  /* overflow: hidden; */
+  
+
+}
+
+.move_card {
+  position: absolute;
+  width: 100%;
+  transition: all  .9s ease-in-out;
+  /* transition:  .6s ease-in-out; */
+  top: 100%;
+  height: 0;
+  background-image: linear-gradient(45deg , #f0c000 , #208080);
+  opacity: 0;
+
+}
+
+/* .min_card::before {
+  content: attr(data-offer);
+  position: absolute;
+  width: 80%;
+  height: 40px;
+  background-color: rgb(243, 243, 249);
+  transform: rotate(-40deg);
+  top: 35px;
+  right: 100px;
+  opacity: 1;
+  color: rgb(240, 74, 74);
+  display: flex;justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-shadow: 1px 1px 20px rgb(4, 4, 4);
+  font-weight: 700;
+  font-size: 1.2rem;
+  text-transform: capitalize;
+
+} */
+
+.min_card:hover .move_card {
+  opacity: .9;
+  height: 100%;
+  top: 0%;
+
+
+}
