@@ -76,9 +76,10 @@ export const FunStoreProvider = ({ children }) => {
   const correctCartItems = () => {
     "use client";
     if (cartItems) {
-      cartItems.map((x) => {
+      cartItems.map(async(x) => {
         if (x.productId === null) {
-          removeItem(x._id);
+         await removeItem(x._id);
+         await getCart()
         }
       });
     }
