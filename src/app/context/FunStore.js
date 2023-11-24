@@ -10,18 +10,24 @@ export const FunStoreProvider = ({ children }) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { userToken, setUserInfo, userInfo, basicUrl } = Store();
   const [cart, setCart] = useState("");
-  const [cartItems, setCartItems] = useState(
-    localStorage.cartItems ? JSON.parse(localStorage.cartItems) : []
-  );
+  const [cartItems, setCartItems] = useState([]);
+  const [wishList, setWishList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [brandsList, setBrandsList] = useState([]);
-  const [wishList, setWishList] = useState(
-    localStorage.wishList ? JSON.parse(localStorage.wishList) : []
-  );
   const [allOrders, setAllOrders] = useState([]);
   const [pagination, setPagination] = useState("");
   const [products, setProducts] = useState([]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setWishList(
+        localStorage.wishList ? JSON.parse(localStorage.wishList) : []
+      );
+      setCartItems(
+        localStorage.cartItems ? JSON.parse(localStorage.cartItems) : []
+      );
+    }
+  }, []);
 
   const getProducts = async () => {
     "use client";
@@ -49,7 +55,7 @@ export const FunStoreProvider = ({ children }) => {
         })
         .then((res) => {
           if (res.status === 200) {
-            console.log(res)
+            console.log(res);
             setCartItems(res.data.cart.cartItems);
             localStorage.setItem(
               "cartItems",
@@ -60,26 +66,25 @@ export const FunStoreProvider = ({ children }) => {
           }
         })
         .catch((err) => {
-          console.log(err)
+          console.log(err);
           // setLoading(false);
           setCartItems([]);
-        })
+        });
     }
   };
 
-  const correctCartItems = ()=>{
+  const correctCartItems = () => {
     "use client";
-if (cartItems) {
-  cartItems.map( (x)=>{
-    if (x.productId === null) {
-    removeItem(x._id)
+    if (cartItems) {
+      cartItems.map((x) => {
+        if (x.productId === null) {
+          removeItem(x._id);
+        }
+      });
     }
-  })
-  
-}
-  }
+  };
   const removeItem = async (id) => {
-    closeSnackbar()
+    closeSnackbar();
     await axios
       .patch(
         `${basicUrl}/cart`,
@@ -96,8 +101,6 @@ if (cartItems) {
         enqueueSnackbar(`${err.response.data}`, { variant: "error" });
       });
   };
-
-
 
   const getWishList = async () => {
     "use client";
@@ -118,16 +121,18 @@ if (cartItems) {
   };
   //----------------------------------------------------------------//
   const addItemToCart = async (item) => {
-    console.log(userInfo)
+    console.log(userInfo);
     if (!userToken) {
       enqueueSnackbar("please login first ", { variant: "info" });
       // setOpenLoginDailog(true);
       return;
     }
     if (userInfo._isBlocked) {
-      enqueueSnackbar("Sorry!! , you can't add item pleace Return  callCenter ", { variant: "info" });
-      return
-
+      enqueueSnackbar(
+        "Sorry!! , you can't add item pleace Return  callCenter ",
+        { variant: "info" }
+      );
+      return;
     }
     if (item.quatitiy < 1) {
       closeSnackbar();
@@ -257,8 +262,8 @@ if (cartItems) {
         products,
         setProducts,
         getProducts,
-        removeItem,correctCartItems
-
+        removeItem,
+        correctCartItems,
       }}
     >
       {children}
