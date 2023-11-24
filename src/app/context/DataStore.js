@@ -36,7 +36,6 @@ export const DataStoreProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
-          console.log(res.data);
           if (res.status === 200) {
             setUserInfo(res.data.user);
             localStorage.setItem("userInfo", JSON.stringify(res.data.user));
@@ -67,7 +66,6 @@ export const DataStoreProvider = ({ children }) => {
       )
       .then((res) => {
         if (res.status === 200) {
-          console.log(res);
           localStorage.removeItem("userInfo");
           localStorage.removeItem("userToken");
           localStorage.removeItem("cartItems");

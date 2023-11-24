@@ -38,7 +38,6 @@ export const FunStoreProvider = ({ children }) => {
         if (res.status === 200) {
           setProducts(res.data);
         }
-        // setLoadings(false);
       })
       .catch((err) => {
         // setLoadings(false);
@@ -55,14 +54,12 @@ export const FunStoreProvider = ({ children }) => {
         })
         .then((res) => {
           if (res.status === 200) {
-            console.log(res);
             setCartItems(res.data.cart.cartItems);
             localStorage.setItem(
               "cartItems",
               JSON.stringify(res.data.cart.cartItems)
             );
             setCart(res.data.cart);
-            // setLoading(false);
           }
         })
         .catch((err) => {
@@ -122,7 +119,6 @@ export const FunStoreProvider = ({ children }) => {
   };
   //----------------------------------------------------------------//
   const addItemToCart = async (item) => {
-    console.log(userInfo);
     if (!userToken) {
       enqueueSnackbar("please login first ", { variant: "info" });
       // setOpenLoginDailog(true);
@@ -148,12 +144,9 @@ export const FunStoreProvider = ({ children }) => {
       })
       .then(async (res) => {
         if (res.status === 200) {
-          console.log(res);
           enqueueSnackbar(`${res.data.message}`, {
             variant: "success",
           });
-          // setSeleProduct("");
-          // setOpenDilago(false);
         }
         getCart();
       })
@@ -227,7 +220,6 @@ export const FunStoreProvider = ({ children }) => {
   //---------------------------end_admin-------------------------------------//
   useEffect(() => {
     if (userToken) {
-      // getUserInfo();
 
       if (userInfo && userInfo?._isAdmin !== "admin") {
         getCart();
