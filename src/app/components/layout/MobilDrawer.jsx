@@ -34,9 +34,9 @@ export default function MobilDrawer() {
     closeHandler();
   };
   const userList = [
-    { title: "Profile", path: `/${userInfo.name}/profile`, icon: <Person /> },
-    { title: "My Wish List ", path: `/${userInfo.name}/wishList`, icon: <Favorite /> },
-    { title: "My orders", path: `/${userInfo.name}/order`, icon: <Inventory2 /> },
+    { title: "Profile", path: `/${userInfo?.name}/profile`, icon: <Person /> },
+    { title: "My Wish List ", path: `/${userInfo?.name}/wishList`, icon: <Favorite /> },
+    { title: "My orders", path: `/${userInfo?.name}/order`, icon: <Inventory2 /> },
     {
       title: "Log out",
       icon: <Logout />,

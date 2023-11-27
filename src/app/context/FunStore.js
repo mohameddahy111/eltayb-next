@@ -37,7 +37,7 @@ export const FunStoreProvider = ({children}) => {
       .get(`${basicUrl}/product`)
       .then((res) => {
         if (res.status === 200) {
-          setProducts({ data: res.data.data  , page : res.data.page});
+          setProducts({data: res.data.data, page: res.data.page});
         }
       })
       .catch((err) => {
@@ -200,7 +200,7 @@ export const FunStoreProvider = ({children}) => {
         }
       )
       .then((res) => {
-        setAllOrders({orders:res.data.data , page:res.data.page});
+        setAllOrders({orders: res.data.data, page: res.data.page});
       })
       .catch((err) => {
         console.log(err);
@@ -233,10 +233,12 @@ export const FunStoreProvider = ({children}) => {
   //-----------------------------------get All chats--------------------------------//
   //---------------------------end_admin-------------------------------------//
   useEffect(() => {
-    if (userInfo?._isAdmin !== "admin") {
-      // getCart();
-      getWishList();
-      getOrders();
+    if (userInfo) {
+      if (userInfo?._isAdmin !== "admin") {
+        // getCart();
+        getWishList();
+        getOrders();
+      }
     }
   }, [userToken]);
 
