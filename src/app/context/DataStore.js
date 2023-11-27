@@ -1,44 +1,38 @@
-import { useMediaQuery } from "@mui/material";
+import {useMediaQuery} from "@mui/material";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useSnackbar } from "notistack";
-import { createContext, useContext, useEffect, useState } from "react";
+import {useRouter} from "next/navigation";
+import {useSnackbar} from "notistack";
+import {createContext, useContext, useEffect, useState} from "react";
+import {deleteCookie, getCookie, hasCookie, setCookie} from "cookies-next";
 
 const DataStore = createContext();
-export const DataStoreProvider = ({ children }) => {
+export const DataStoreProvider = ({children}) => {
   const router = useRouter();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const basicUrl = "https://eltaybbackend.onrender.com";
   const mobilDiv = useMediaQuery("(max-width:600px)");
   const [userInfo, setUserInfo] = useState(null);
-  const [userToken, setUserToken] = useState(null);
+  const [userToken, setUserToken] = useState(getCookie("userToken") || null);
   const [openLoginDailog, setOpenLoginDailog] = useState(false);
   const [openCartDailog, setOpenCartDailog] = useState(1);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setUserInfo(
-        localStorage.userInfo ? JSON.parse(localStorage.userInfo) : null
-      );
-      setUserToken(
-        localStorage.userToken ? JSON.parse(localStorage.userToken) : null
-      );
-    }
-  }, []);
-
+    getCookie("userInfo")
+      ? setUserInfo(JSON.parse(getCookie("userInfo")))
+      : setUserInfo(null);
+  }, [getCookie("userInfo")]);
   const getUserInfo = async (token) => {
     "use client";
     token = token || userToken;
     if (token) {
       await axios
         .get(`${basicUrl}/users/userInfo`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {Authorization: `Bearer ${token}`},
         })
         .then((res) => {
           if (res.status === 200) {
             setUserInfo(res.data.user);
-            localStorage.setItem("userInfo", JSON.stringify(res.data.user));
+            setCookie("userInfo", res.data.user);
             enqueueSnackbar(`wellcome ,  ${res.data.user.name}`, {
               variant: "success",
             });
@@ -62,13 +56,13 @@ export const DataStoreProvider = ({ children }) => {
         {
           _isActive: false,
         },
-        { headers: { Authorization: `Bearer ${userToken}` } }
+        {headers: {Authorization: `Bearer ${userToken}`}}
       )
       .then((res) => {
         if (res.status === 200) {
-          localStorage.removeItem("userInfo");
-          localStorage.removeItem("userToken");
-          localStorage.removeItem("cartItems");
+          deleteCookie("userInfo");
+          deleteCookie("userToken");
+          deleteCookie("cartItems");
           setUserInfo(null);
           setUserToken(null);
           router.refresh();

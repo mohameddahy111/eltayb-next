@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Alert,
   Button,
@@ -16,6 +18,7 @@ import { Store } from "@/app/context/DataStore";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { LoadingButton } from "@mui/lab";
+import { setCookie } from "cookies-next";
 
 export default function Signin() {
   const { setOpenLoginDailog, setUserToken, getUserInfo, basicUrl } = Store();
@@ -44,14 +47,16 @@ export default function Signin() {
         .post(`${basicUrl}/users/login`, values)
         .then((res) => {
           if (res.status === 200) {
-            localStorage.setItem("userToken", JSON.stringify(res.data.token));
+            setCookie('userToken', res.data.token)
+            // localStorage.setItem("userToken", JSON.stringify(res.data.token));
             setUserToken(res.data.token);
               getUserInfo(res.data.token);
 
           }
         })
         .catch((err) => {
-          console.log(err);
+          enqueueSnackbar(`${err.response.data}`,{variant:'error'})
+          setDisabled(false)
         })
     },
   });

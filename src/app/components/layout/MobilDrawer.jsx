@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export default function MobilDrawer() {
-  const { userInfo, setOpenLoginDailog, logout } = Store();
+  const { userInfo, setOpenLoginDailog, logout  , } = Store();
   const [oppenDrawer, setOppenDrawer] = useState(false);
   const router = useRouter();
   const closeHandler = () => {
@@ -34,9 +34,9 @@ export default function MobilDrawer() {
     closeHandler();
   };
   const userList = [
-    { title: "Profile", path: "/profile", icon: <Person /> },
-    { title: "My Favorite ", path: "/favorite", icon: <Favorite /> },
-    { title: "My orders", path: "/orders", icon: <Inventory2 /> },
+    { title: "Profile", path: `/${userInfo.name}/profile`, icon: <Person /> },
+    { title: "My Wish List ", path: `/${userInfo.name}/wishList`, icon: <Favorite /> },
+    { title: "My orders", path: `/${userInfo.name}/order`, icon: <Inventory2 /> },
     {
       title: "Log out",
       icon: <Logout />,

@@ -49,7 +49,7 @@ export default function MinList({ mode, setMode }) {
             }}
           >
             {list.map((x, index) => (
-              <React.Fragment key={index}>
+              <Box key={index}>
                 {userInfo && x.title === "Login" ? (
                   <UserMenu />
                 ) : (
@@ -71,7 +71,7 @@ export default function MinList({ mode, setMode }) {
                     </ListItemButton>
                   </Tooltip>
                 )}
-              </React.Fragment>
+              </Box>
             ))}
           </List>
         </Box>

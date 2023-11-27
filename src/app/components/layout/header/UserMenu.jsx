@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -8,12 +10,15 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
-import { Dashboard, Favorite, Inventory2 } from "@mui/icons-material";
-import { useRouter } from "next/navigation";
-import { Store } from "@/app/context/DataStore";
+import {Dashboard, Favorite, Inventory2} from "@mui/icons-material";
+import {useRouter} from "next/navigation";
+import {Store} from "@/app/context/DataStore";
+import { StoreFun } from "@/app/context/FunStore";
+import { Typography } from "@mui/material";
 
 export default function UserMenu() {
   const { userInfo, logout } = Store();
+  // const {userInfo}=StoreFun()
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -23,20 +28,23 @@ export default function UserMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   return (
-    <React.Fragment>
-      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
+    <React.Fragment >
+      {userInfo && (
+        <React.Fragment>
+      <Box  sx={{display: "flex", alignItems: "center", textAlign: "center"}}>
         <Tooltip title="">
           <IconButton
             onClick={handleClick}
             size="small"
-            sx={{ ml: 2 }}
+            sx={{ml: 2}}
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            <Typography variant="h6" color={'#208080'}>
+              {userInfo.name}
+            </Typography>
           </IconButton>
         </Tooltip>
       </Box>
@@ -72,8 +80,8 @@ export default function UserMenu() {
             },
           },
         }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        transformOrigin={{horizontal: "right", vertical: "top"}}
+        anchorOrigin={{horizontal: "right", vertical: "bottom"}}
       >
         {userInfo._isAdmin === "admin" ? (
           <MenuItem onClick={() => router.push(`/dashboard`)}>
@@ -83,24 +91,30 @@ export default function UserMenu() {
             Dash board
           </MenuItem>
         ) : (
-          <MenuItem onClick={handleClose}>
+          <MenuItem
+            onClick={() =>
+              handleClose(router.push(`/${userInfo.name}/profile/`))
+            }
+          >
             <ListItemIcon>
               <Avatar />
             </ListItemIcon>
             Profile
           </MenuItem>
         )}
-        <MenuItem onClick={() => handleClose(router.push("/user/wishList/"))}>
+        <MenuItem
+          onClick={() =>
+            handleClose(router.push(`/${userInfo.name}/wishList/`))
+          }
+        >
           <ListItemIcon>
             <Favorite />
           </ListItemIcon>
-          My Favorite
+          My wish List
         </MenuItem>
         <Divider />
         <MenuItem
-          onClick={() =>
-            handleClose(router.push(`/user/${userInfo._id}/orders`))
-          }
+          onClick={() => handleClose(router.push(`/${userInfo.name}/order/`))}
         >
           <ListItemIcon>
             <Inventory2 fontSize="small" />
@@ -118,6 +132,9 @@ export default function UserMenu() {
           Logout
         </MenuItem>
       </Menu>
+
+        </React.Fragment>
+      ) }
     </React.Fragment>
   );
 }

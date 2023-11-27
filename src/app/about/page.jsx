@@ -1,3 +1,4 @@
+import { Box } from '@mui/material'
 import React from 'react'
 
 
@@ -6,6 +7,6 @@ title : 'El@tayb - About Us',
 }
 export default function page() {
   return (
-    <div>about</div>
+    <Box>about</Box>
   )
 }

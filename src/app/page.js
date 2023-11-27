@@ -1,3 +1,4 @@
+
 import {
   Box,
   Button,
@@ -85,6 +86,7 @@ export default function Home() {
             <Box>
               <CategorySwipers/>
             </Box>
+          
         </Container>
       </Box>
     </Box>

@@ -1,14 +1,14 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { Store } from "./DataStore";
+import {createContext, useContext, useEffect, useState} from "react";
+import {Store} from "./DataStore";
 import axios from "axios";
-import { useSnackbar } from "notistack";
-
+import {useSnackbar} from "notistack";
+import {getCookie, setCookie} from "cookies-next";
 const FunStore = createContext();
-export const FunStoreProvider = ({ children }) => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const { userToken, setUserInfo, userInfo, basicUrl } = Store();
+export const FunStoreProvider = ({children}) => {
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
+  const {userToken, userInfo, basicUrl} = Store();
   const [cart, setCart] = useState("");
   const [cartItems, setCartItems] = useState([]);
   const [wishList, setWishList] = useState([]);
@@ -17,17 +17,18 @@ export const FunStoreProvider = ({ children }) => {
   const [allOrders, setAllOrders] = useState([]);
   const [pagination, setPagination] = useState("");
   const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setWishList(
-        localStorage.wishList ? JSON.parse(localStorage.wishList) : []
-      );
-      setCartItems(
-        localStorage.cartItems ? JSON.parse(localStorage.cartItems) : []
-      );
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     setWishList(
+  //       getCookie("wishList") || []
+  //     );
+  //     setCartItems(
+  //       getCookie('cartItems') ||[]
+  //     );
+  //   }
+  // }, []);
 
   const getProducts = async () => {
     "use client";
@@ -36,36 +37,34 @@ export const FunStoreProvider = ({ children }) => {
       .get(`${basicUrl}/product`)
       .then((res) => {
         if (res.status === 200) {
-          setProducts(res.data);
+          setProducts({ data: res.data.data  , page : res.data.page});
         }
       })
       .catch((err) => {
-        // setLoadings(false);
+        enqueueSnackbar(`${err.response.data}`, {variant: "error"});
       });
   };
 
   const getCart = async () => {
     "use client";
-
+    closeSnackbar();
     if (userToken) {
       return await axios
         .get(`${basicUrl}/cart`, {
-          headers: { Authorization: `Bearer ${userToken}` },
+          headers: {Authorization: `Bearer ${userToken}`}
         })
         .then((res) => {
           if (res.status === 200) {
             setCartItems(res.data.cart.cartItems);
-            localStorage.setItem(
-              "cartItems",
-              JSON.stringify(res.data.cart.cartItems)
-            );
+            setCookie("cartItems", res.data.cart.cartItems);
             setCart(res.data.cart);
+            correctCartItems();
           }
         })
         .catch((err) => {
-          console.log(err);
-          // setLoading(false);
+          enqueueSnackbar(`${err.response.data}`, {variant: "warning"});
           setCartItems([]);
+          closeSnackbar();
         });
     }
   };
@@ -75,8 +74,7 @@ export const FunStoreProvider = ({ children }) => {
     if (cartItems) {
       cartItems.map((x) => {
         if (x.productId === null) {
-        removeItem(x._id);
-        getCart()
+          removeItem(x._id);
         }
       });
     }
@@ -86,17 +84,17 @@ export const FunStoreProvider = ({ children }) => {
     await axios
       .patch(
         `${basicUrl}/cart`,
-        { itemId: id },
-        { headers: { Authorization: `Bearer ${userToken}` } }
+        {itemId: id},
+        {headers: {Authorization: `Bearer ${userToken}`}}
       )
       .then((res) => {
         if (res.status === 200) {
-          enqueueSnackbar(`${res.data.message}`, { variant: "success" });
+          enqueueSnackbar(`${res.data.message}`, {variant: "success"});
           getCart();
         }
       })
       .catch((err) => {
-        enqueueSnackbar(`${err.response.data}`, { variant: "error" });
+        enqueueSnackbar(`${err.response.data}`, {variant: "error"});
       });
   };
 
@@ -105,55 +103,72 @@ export const FunStoreProvider = ({ children }) => {
 
     await axios
       .get(`${basicUrl}/wishlist/`, {
-        headers: { Authorization: `Bearer ${userToken}` },
+        headers: {Authorization: `Bearer ${userToken}`}
       })
       .then((res) => {
         if (res.status === 200) {
           setWishList(res.data.products);
-          localStorage.setItem("wishlist", JSON.stringify(res.data.products));
+          setCookie("wishlist", res.data.products);
         }
       })
       .catch((err) => {
-        enqueueSnackbar(`${err.response?.data}`, { variant: "error" });
+        enqueueSnackbar(`${err.response?.data}`, {variant: "error"});
       });
   };
   //----------------------------------------------------------------//
   const addItemToCart = async (item) => {
     if (!userToken) {
-      enqueueSnackbar("please login first ", { variant: "info" });
+      enqueueSnackbar("please login first ", {variant: "info"});
       // setOpenLoginDailog(true);
       return;
     }
     if (userInfo._isBlocked) {
       enqueueSnackbar(
         "Sorry!! , you can't add item pleace Return  callCenter ",
-        { variant: "info" }
+        {variant: "info"}
       );
       return;
     }
     if (item.quatitiy < 1) {
       closeSnackbar();
       enqueueSnackbar("Quatitiy must be greater than 1", {
-        variant: "error",
+        variant: "error"
       });
       return;
     }
     await axios
       .post(`${basicUrl}/cart`, item, {
-        headers: { Authorization: `Bearer ${userToken}` },
+        headers: {Authorization: `Bearer ${userToken}`}
       })
       .then(async (res) => {
         if (res.status === 200) {
           enqueueSnackbar(`${res.data.message}`, {
-            variant: "success",
+            variant: "success"
           });
         }
         getCart();
       })
       .catch((err) => {
-        enqueueSnackbar(`${err.response?.data}`, { variant: "error" });
+        enqueueSnackbar(`${err.response?.data}`, {variant: "error"});
       });
   };
+  //-------------------------get orders---------------------------------------//
+  const getOrders = async (page) => {
+    await axios
+      .get(`${basicUrl}/orders?sort=-createdAt&page=${page ? page : 1}`, {
+        headers: {authorization: `Bearer ${userToken}`}
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          setOrders({orders: res.data.data, page: res.data.page});
+        }
+      })
+      .catch((err) => {
+        enqueueSnackbar(`${err.response.data}`, {variant: "error"});
+      });
+  };
+
+  //-------------------------end get orders---------------------------------------//
 
   // const getUserInfo = async () => {
   //   if (userToken && !userInfo) {
@@ -181,12 +196,11 @@ export const FunStoreProvider = ({ children }) => {
           page ? page : 1
         }&sort=_isAccept,-createdAt`,
         {
-          headers: { Authorization: `Bearer ${userToken}` },
+          headers: {Authorization: `Bearer ${userToken}`}
         }
       )
       .then((res) => {
-        setAllOrders(res.data.data);
-        setPagination(res.data.page);
+        setAllOrders({orders:res.data.data , page:res.data.page});
       })
       .catch((err) => {
         console.log(err);
@@ -219,12 +233,10 @@ export const FunStoreProvider = ({ children }) => {
   //-----------------------------------get All chats--------------------------------//
   //---------------------------end_admin-------------------------------------//
   useEffect(() => {
-    if (userToken) {
-
-      if (userInfo && userInfo?._isAdmin !== "admin") {
-        getCart();
-        getWishList();
-      }
+    if (userInfo?._isAdmin !== "admin") {
+      // getCart();
+      getWishList();
+      getOrders();
     }
   }, [userToken]);
 
@@ -257,6 +269,9 @@ export const FunStoreProvider = ({ children }) => {
         getProducts,
         removeItem,
         correctCartItems,
+        orders,
+        setOrders,
+        getOrders
       }}
     >
       {children}

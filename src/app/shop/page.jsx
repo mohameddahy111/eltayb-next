@@ -20,6 +20,7 @@ import "../css/minCard.css";
 import AddToCard from "../components/shop/AddToCard";
 import Loading from "../loading";
 import { StoreFun } from "../context/FunStore";
+import Pages from "../components/Pages";
 
 export default function page() {
   const {getProducts , products}=StoreFun()
@@ -108,7 +109,8 @@ export default function page() {
                 </Card>
               </Grid>
             ))}
-          </Grid>
+        </Grid>
+        <Pages data={products.page} fundo={getProducts} />
         </Container>
     </Suspense>
   );
