@@ -11,9 +11,13 @@ import React from "react";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { Store } from "@/app/context/DataStore";
+import axios from "axios";
+import { useSnackbar } from "notistack";
 
 export default function SignUp() {
-  const { setOpenLoginDailog } = Store();
+  const { setOpenLoginDailog, basicUrl } = Store();
+  const {enqueueSnackbar}= useSnackbar()
+  
 
   const validationSchema = yup.object({
     name:yup.string().min(2 ).required(),
@@ -38,7 +42,20 @@ export default function SignUp() {
       email: "",
       password: "",phone:"" , cpassword:'',name:''
     },
-    onSubmit: async (values) => {},
+    onSubmit: async (values) => {
+      await axios
+      .post(`${basicUrl}/users/`, values)
+      .then((res) => {
+       if (res.status ===201) {
+        enqueueSnackbar(`${res.data}` , {variant:'success'})
+        setOpenLoginDailog(false)
+       };
+      })
+      .catch((err) => {
+        enqueueSnackbar(`${err.response.data}` , {variant:'error'})
+      });
+
+    },
   });
 
   return (

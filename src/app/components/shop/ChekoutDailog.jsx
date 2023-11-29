@@ -4,7 +4,7 @@ import { Box, Button, Dialog, DialogTitle, DialogContent, DialogContentText, Dia
 import React, { useState } from "react";
 import CheakeOut from "./CheakeOut";
 
-export default function ChekoutDailog() {
+export default function ChekoutDailog({fundo}) {
   const [open, setOpen] = useState(false)
   const closeHandler = () => {
     setOpen(false)
@@ -19,7 +19,7 @@ export default function ChekoutDailog() {
         <DialogTitle id={"title"}>
           Check out 
         </DialogTitle>
-          <CheakeOut closeHandler={closeHandler} />
+          <CheakeOut closeDailog={closeHandler} fundo={fundo} />
       </Dialog>
     </Box>
   );

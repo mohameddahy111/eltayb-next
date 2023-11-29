@@ -11,7 +11,7 @@ export const dashboardMenu = [
   { title: "Dash Board", path: "/dashboard", icon: <Dashboard sx={{ color:'#fff'}}/> },
   { title: "Products", path: "/dashboard/products", icon: <Inventory2 sx={{ color:'#fff'}}/> },
   { title: "users", path: "/dashboard/users", icon: <Groups2 sx={{ color:'#fff'}}/> },
-  { title: "orders",  icon: <AddBusiness sx={{ color:'#fff'}}/> },
+  { title: "orders",path:"/dashboard/orders" ,   icon: <AddBusiness sx={{ color:'#fff'}}/> },
   { title: "logout",  icon: <Logout sx={{ color:'#fff'}}/> },
 ]
 

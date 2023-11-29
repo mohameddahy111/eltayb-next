@@ -9,21 +9,26 @@ import logo from "../../../public/img/logo1.png";
 import Image from "next/image";
 import Link from "next/link";
 import { useMediaQuery } from "@mui/material";
+import { StoreFun } from "../context/FunStore";
 
 
 export default function layout({ children }) {
-  const { userInfo ,  } = Store();
+  const { userInfo, userToken } = Store();
+  const {getAllOrders}=StoreFun()
   const mobilDiv = useMediaQuery('(max-width:800px)')
   const router = useRouter();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
     closeSnackbar();
-    if (!userInfo ||( userInfo && userInfo._isAdmin !=='admin')) {
+    if (!userToken ||( userToken && userInfo?._isAdmin !=='admin')) {
       router.push("/");
       enqueueSnackbar("admins omly can enter her", { variant: "error" });
     }
-  }, [userInfo]);
+    if (userToken || (userToken && userInfo?._isAdmin==='admin')) {
+      getAllOrders()
+    }
+  }, [userToken]);
 
   return (
     <div>

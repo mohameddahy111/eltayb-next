@@ -16,9 +16,11 @@ import {
   Typography,
   Box
 } from "@mui/material";
+import {StoreFun} from "../context/FunStore";
 
 export default function DetailsOrderDetails({data}) {
   const [open, setOPen] = useState(false);
+  const {addItemToCart} = StoreFun();
 
   const handleClickOpen = () => {
     setOPen(true);
@@ -27,18 +29,29 @@ export default function DetailsOrderDetails({data}) {
   const handleClose = () => {
     setOPen(false);
   };
+  const reorder =  () => {
+    // data.cartItems.map( (ele) => {
+    //     const item = {
+    //       productId: ele.productId._id,
+    //       size: ele.size,
+    //       quantity: ele.quantity
+    //     };
+    //     addItemToCart(item);
+    //   });
+      
+  };
 
   return (
     <Box>
-      <Button  onClick={handleClickOpen}  color="secondary" variant="contained">
+      <Button onClick={handleClickOpen} color="secondary" variant="contained">
         Detalis
       </Button>
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-              fullWidth
+        aria-describedby="alert-dialog-description"
+        fullWidth
       >
         <DialogTitle id="alert-dialog-title">
           Order No : {data?._id}
@@ -97,9 +110,14 @@ export default function DetailsOrderDetails({data}) {
           </Grid>{" "}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose} autoFocus>
-            Agree
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button
+            onClick={() => {
+              reorder(handleClose());
+            }}
+            autoFocus
+          >
+            Re-order
           </Button>
         </DialogActions>
       </Dialog>

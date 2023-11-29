@@ -69,7 +69,7 @@ function a11yProps(index) {
     "aria-controls": `simple-tabpanel-${index}`
   };
 }
-export default function CheakeOut({closeHandler}) {
+export default function CheakeOut({fundo , closeDailog}) {
   const router = useRouter();
   const [value, setValue] = useState(0);
   const [disabled, setDisabled] = useState(false);
@@ -106,12 +106,11 @@ export default function CheakeOut({closeHandler}) {
         )
         .then((res) => {
           if (res.status === 201) {
-            console.log(res);
             enqueueSnackbar(`${res.data.message}`, {variant: "success"});
             if (res.data.order[0].payment_Mathed === "cash") {
               router.push(`/${userInfo.name}/order`);
               getCart();
-              closeHandler()
+              fundo()
             }
           }
         })
@@ -463,7 +462,7 @@ export default function CheakeOut({closeHandler}) {
           <Grid item xs={12}>
             <DialogActions>
               {value === 0 ? (
-                <Button onClick={() => closeHandler()} color="primary">
+                <Button onClick={() => closeDailog()} color="primary">
                   Cancel
                 </Button>
               ) : (

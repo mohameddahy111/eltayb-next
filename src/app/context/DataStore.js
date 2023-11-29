@@ -52,7 +52,7 @@ export const DataStoreProvider = ({children}) => {
   const logout = async () => {
     await axios
       .patch(
-        `${basicUrl}/users/logout/${userInfo._id}`,
+        `${basicUrl}/users/logout/${userInfo?._id}`,
         {
           _isActive: false,
         },
@@ -63,6 +63,7 @@ export const DataStoreProvider = ({children}) => {
           deleteCookie("userInfo");
           deleteCookie("userToken");
           deleteCookie("cartItems");
+          deleteCookie("wishlist");
           setUserInfo(null);
           setUserToken(null);
           router.refresh();

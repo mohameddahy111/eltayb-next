@@ -9,9 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import GridHome from "./components/home/GridHome";
-import ProductHomeSwiper from "./components/home/ProductHomeSwiper";
-import { moreSeller, recently } from "./utils/data";
-import { StoreFun } from "./context/FunStore";
 import CategorySwipers from "./components/home/CategorySwipers";
 
 export const metadata = {
@@ -24,7 +21,6 @@ export default function Home() {
   return (
     <Box>
       <GridHome />
-      
       <Box>
         <Container sx={{ py: "20px" }}>
           <Grid container spacing={1}>

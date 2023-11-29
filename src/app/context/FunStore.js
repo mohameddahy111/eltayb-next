@@ -4,7 +4,7 @@ import {createContext, useContext, useEffect, useState} from "react";
 import {Store} from "./DataStore";
 import axios from "axios";
 import {useSnackbar} from "notistack";
-import {getCookie, setCookie} from "cookies-next";
+import {deleteCookie, getCookie, setCookie} from "cookies-next";
 const FunStore = createContext();
 export const FunStoreProvider = ({children}) => {
   const {enqueueSnackbar, closeSnackbar} = useSnackbar();
@@ -30,6 +30,12 @@ export const FunStoreProvider = ({children}) => {
   //   }
   // }, []);
 
+  useEffect(() => {
+    getCookie("wishlist")
+      ? setWishList(JSON.parse(getCookie("wishlist")))
+      : setWishList(null);
+  }, [getCookie("wishlist")]);
+
   const getProducts = async () => {
     "use client";
 
@@ -41,13 +47,12 @@ export const FunStoreProvider = ({children}) => {
         }
       })
       .catch((err) => {
-        enqueueSnackbar(`${err.response.data}`, {variant: "error"});
+        enqueueSnackbar(`${err.response?.data}`, {variant: "error"});
       });
   };
 
   const getCart = async () => {
     "use client";
-    closeSnackbar();
     if (userToken) {
       return await axios
         .get(`${basicUrl}/cart`, {
@@ -62,7 +67,7 @@ export const FunStoreProvider = ({children}) => {
           }
         })
         .catch((err) => {
-          enqueueSnackbar(`${err.response.data}`, {variant: "warning"});
+          enqueueSnackbar(`${err.response?.data}`, {variant: "warning"});
           setCartItems([]);
           closeSnackbar();
         });
@@ -80,7 +85,6 @@ export const FunStoreProvider = ({children}) => {
     }
   };
   const removeItem = async (id) => {
-    closeSnackbar();
     await axios
       .patch(
         `${basicUrl}/cart`,
@@ -94,21 +98,27 @@ export const FunStoreProvider = ({children}) => {
         }
       })
       .catch((err) => {
-        enqueueSnackbar(`${err.response.data}`, {variant: "error"});
+        enqueueSnackbar(`${err.response?.data}`, {variant: "error"});
       });
   };
 
   const getWishList = async () => {
-    "use client";
-
+    // "use client";
+closeSnackbar()
     await axios
       .get(`${basicUrl}/wishlist/`, {
         headers: {Authorization: `Bearer ${userToken}`}
       })
       .then((res) => {
+        console.log(res);
         if (res.status === 200) {
-          setWishList(res.data.products);
-          setCookie("wishlist", res.data.products);
+          if (res.data.message === "wish List is Empty") {
+            setWishList([])
+            enqueueSnackbar(`${res.data.message}`, { variant: 'warning' })
+          } else {
+            setWishList(res.data.products);
+            setCookie("wishlist", res.data.products);
+          }
         }
       })
       .catch((err) => {
@@ -146,7 +156,7 @@ export const FunStoreProvider = ({children}) => {
             variant: "success"
           });
         }
-        getCart();
+        await getCart();
       })
       .catch((err) => {
         enqueueSnackbar(`${err.response?.data}`, {variant: "error"});
@@ -164,7 +174,7 @@ export const FunStoreProvider = ({children}) => {
         }
       })
       .catch((err) => {
-        enqueueSnackbar(`${err.response.data}`, {variant: "error"});
+        enqueueSnackbar(`${err.response?.data}`, {variant: "error"});
       });
   };
 
@@ -188,7 +198,7 @@ export const FunStoreProvider = ({children}) => {
   //   }
   // };
   //---------------------------admin-------------------------------------//
-  //---------------------------get all orders-------------------------------------//
+  //---------------------------get all admin orders-------------------------------------//
   const getAllOrders = async (page) => {
     await axios
       .get(
@@ -200,12 +210,17 @@ export const FunStoreProvider = ({children}) => {
         }
       )
       .then((res) => {
-        setAllOrders({orders: res.data.data, page: res.data.page});
+        setAllOrders({
+          orders: res.data.data,
+          page: res.data.page,
+          unaccepted: res.data.unaccepted
+        });
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
   //-----------------------------------get all category--------------------------------------//
   const getAllCategories = async () => {
     await axios
@@ -238,6 +253,9 @@ export const FunStoreProvider = ({children}) => {
         // getCart();
         getWishList();
         getOrders();
+      }
+      if (userInfo?._isAdmin === "admin") {
+        getAllOrders();
       }
     }
   }, [userToken]);

@@ -160,8 +160,8 @@ export default function CartDialog() {
                           </TableBody>
                         </Table>
                       </TableContainer>
-                      <ListItemButton>
-                        <ChekoutDailog />
+                      <ListItemButton >
+                        <ChekoutDailog fundo={handelClose} />
 
                       </ListItemButton>
                     </List>

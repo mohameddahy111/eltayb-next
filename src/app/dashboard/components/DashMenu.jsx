@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import DashDrawer from "./DashDrawer";
 import { useMediaQuery } from "@mui/material";
+import { StoreFun } from "@/app/context/FunStore";
 
 
 export default function DashMenu() {
   const router = useRouter();
-  const {   logout} = Store();
+  const { logout } = Store();
+  const {allOrders}=StoreFun()
   const mobilDiv = useMediaQuery('(max-width:800px)')
   return (
     <Box>
@@ -21,12 +23,12 @@ export default function DashMenu() {
                 <ListItem>
                   {ele.title === "orders" ? (
                     <Badge
-                      badgeContent={1}
+                      badgeContent={allOrders?.unaccepted?.length}
                       color="error"
                       overlap="circular"
                       anchorOrigin={{ horizontal: "left", vertical: "top" }}
                     >
-                      <IconButton size='small'>{ele.icon}</IconButton>
+                      <IconButton onClick={()=>router.push(`${ele.path}`)}  size='small'>{ele.icon}</IconButton>
                     </Badge>
                   ) : (
                     <IconButton size="small"
