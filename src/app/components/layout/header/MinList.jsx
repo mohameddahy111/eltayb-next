@@ -35,8 +35,8 @@ export default function MinList({ mode, setMode }) {
 
           <Switch
             onChange={() => setMode(!mode)}
-            icon={<Nightlight />}
-            checkedIcon={<LightMode />}
+            icon={<LightMode sx={{color:'#f0c000'}} />}
+            checkedIcon={<Nightlight sx={{color:'#09c'}} />}
             />
             </Tooltip>
 

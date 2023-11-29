@@ -25,7 +25,7 @@ export default function Footer({ mode }) {
   const linksList = [
     { title: "Home", path: "/" },
     { title: "Shop", path: "/shop" },
-    { title: "Offers", path: "/offers" },
+    { title: "Offers", path: "/" },
     { title: "About us", path: "/about" },
     { title: " privacy policy", path: "/privacy_policy" },
   ];

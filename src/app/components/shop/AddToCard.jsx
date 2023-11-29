@@ -75,8 +75,9 @@ export default function AddToCard({ icon, data, color }) {
             onClick={() => setOpen(true)}
             startIcon={<AddShoppingCart />}
             disabled={data.statue ? false : true}
-          >
-            Add to cart
+            >
+              {data.statue ? " Add to cart" : 'not available'}
+           
           </Button>
         )}
       </Tooltip>

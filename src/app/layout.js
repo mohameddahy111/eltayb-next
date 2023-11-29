@@ -25,7 +25,7 @@ import { SnackbarProvider } from "notistack";
 import { FunStoreProvider} from "./context/FunStore";
 
 export default function RootLayout({ children }) {
-  const [mode, setMode] = useState(false);
+  const [mode, setMode] = useState(true);
   const [newMode, setNewMode] = useState("dark");
   const pathName = usePathname();
   const theme = createTheme({
