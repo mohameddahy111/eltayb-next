@@ -27,7 +27,7 @@ export default function Footer({ mode }) {
     { title: "Shop", path: "/shop" },
     { title: "Offers", path: "/offers" },
     { title: "About us", path: "/about" },
-    { title: " privacy policy", path: "/ privacy_policy" },
+    { title: " privacy policy", path: "/privacy_policy" },
   ];
   const mediaList = [
     {

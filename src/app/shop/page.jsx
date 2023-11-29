@@ -1,23 +1,10 @@
 "use client";
-import {  Favorite, Sell } from "@mui/icons-material";
 import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Chip,
   Container,
   Grid,
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Tooltip,
-  Typography,
 } from "@mui/material";
 import React, { Suspense, useEffect } from "react";
 import "../css/minCard.css";
-import AddToCard from "../components/shop/AddToCard";
 import Loading from "../loading";
 import { StoreFun } from "../context/FunStore";
 import Pages from "../components/Pages";

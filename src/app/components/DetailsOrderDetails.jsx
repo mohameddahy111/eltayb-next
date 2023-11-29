@@ -82,7 +82,7 @@ export default function DetailsOrderDetails({data}) {
                             color={"#208080"}
                             textTransform={"capitalize"}
                           >
-                            {x.productId.title}{" "}
+                            {x.productId?.title}{" "}
                           </Typography>
                         </TableCell>
                         <TableCell>

@@ -83,12 +83,12 @@ export default function MinCard({x}) {
         )}
         <List>
           <ListItem>
-            <Typography color={"#f0c000"} variant="body1" fontWeight={700}>
+            <Typography color={"#f0c000"} variant="h6" fontWeight={700}>
               {x.title}
             </Typography>
           </ListItem>
           <ListItem>
-            <Typography variant="caption">{x.sub_title}</Typography>
+            <Typography variant="body1">{x.sub_title}</Typography>
           </ListItem>
           <ListItem></ListItem>
         </List>
