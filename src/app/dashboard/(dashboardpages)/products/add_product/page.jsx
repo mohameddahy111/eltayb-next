@@ -68,7 +68,7 @@ const page = () => {
       enqueueSnackbar("Please select a price", { variant: "error" });
       return;
     }
-    if (priceSize.size === "") {
+    if (priceSize.size === 0) {
       enqueueSnackbar("Please select a size", { variant: "error" });
       return;
     }
