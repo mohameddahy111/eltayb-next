@@ -82,7 +82,7 @@ export default function ProductHomeSwiper({ list, text }) {
         modules={[Pagination, Autoplay]}
         className="mySwiper"
       >
-        {list.map((x, index) => (
+        {list?.map((x, index) => (
           <SwiperSlide key={index}>
             <Card sx={{ width: "100%" }}>
               <CardMedia

@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { AddAPhoto,  } from "@mui/icons-material";
+import {AddAPhoto} from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -14,74 +14,74 @@ import {
   Select,
   Switch,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
-import { useFormik } from "formik";
-import { useSnackbar } from "notistack";
-import React, { useEffect } from "react";
-import { useState } from "react";
+import {useFormik} from "formik";
+import {useSnackbar} from "notistack";
+import React, {useEffect} from "react";
+import {useState} from "react";
 import * as yup from "yup";
 import axios from "axios";
-import { useRouter } from "next/navigation";
-import { Store } from "@/app/context/DataStore";
-import { StoreFun } from "@/app/context/FunStore";
+import {useRouter} from "next/navigation";
+import {Store} from "@/app/context/DataStore";
+import {StoreFun} from "@/app/context/FunStore";
+import AddCategory from "@/app/dashboard/components/AddCategory";
 
 const page = () => {
   const router = useRouter();
-  const {mobilDiv , userToken}=Store()
+  const {mobilDiv, userToken} = Store();
   const {
     getAllCategories,
     categoryList,
-    
+
     brandsList,
-    getAllBrands,
+    getAllBrands
   } = StoreFun();
   const [img, setImg] = useState("");
   const [urlImg, setUrlImg] = useState("");
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const [category, setCategory] = useState("");
   const [brands, setBrands] = useState("");
   const [priceSize, setPriceSize] = useState({
     price: "",
     size: 0,
     final_price: "",
-    offer_value: 0,
+    offer_value: 0
   });
 
   const sizeList = [
-    {title :'small'},
-    {title :'medium'},
-    {title :'large'},
-    {title :'1 Leter'},
-    {title :'1.5 Leter'},
-  ]
+    {title: "small"},
+    {title: "medium"},
+    {title: "large"},
+    {title: "1 Leter"},
+    {title: "1.5 Leter"}
+  ];
   const [ps, setPs] = useState([]);
   const formData = new FormData();
   const valuesPrice = (e) => {
-    let newItem = { ...priceSize };
+    let newItem = {...priceSize};
     newItem[e.target.name] = e.target.value;
     setPriceSize(newItem);
   };
   const add = () => {
-    
     if (priceSize.price === "") {
-      enqueueSnackbar("Please select a price", { variant: "error" });
+      enqueueSnackbar("Please select a price", {variant: "error"});
       return;
     }
     if (priceSize.size === 0) {
-      enqueueSnackbar("Please select a size", { variant: "error" });
+      enqueueSnackbar("Please select a size", {variant: "error"});
       return;
     }
-    const isExist = ps.find((x)=>x.size ===priceSize.size )
+    const isExist = ps.find((x) => x.size === priceSize.size);
     if (isExist) {
-      enqueueSnackbar("this size select before", { variant: "error" });
+      enqueueSnackbar("this size select before", {variant: "error"});
       return;
     }
 
     const list = [...ps];
     list.push(priceSize);
     setPs(list);
-    setPriceSize({ price: "", size: 0, final_price: "", offer_value: 0 });
+    setPriceSize({price: "", size: 0, final_price: "", offer_value: 0});
   };
   const removItem = (x) => {
     const list = ps.filter((z) => z.size !== x.size);
@@ -96,7 +96,7 @@ const page = () => {
     _isShowe: yup.boolean(),
     quantity: yup.number(),
     stock: yup.number(),
-    offer_value: yup.number(),
+    offer_value: yup.number()
   });
 
   const formik = useFormik({
@@ -113,7 +113,7 @@ const page = () => {
       category: category,
       brand: brands,
       url_Img: urlImg,
-      min_image: img,
+      min_image: img
     },
     onSubmit: async (values) => {
       Object.keys(values).map((x, index) => {
@@ -130,20 +130,19 @@ const page = () => {
       });
       await axios
         .post(`https://eltaybbackend.onrender.com/product`, formData, {
-          headers: { Authorization: `Bearer ${userToken}` },
+          headers: {Authorization: `Bearer ${userToken}`}
         })
         .then((res) => {
           if (res.status === 200) {
-            console.log(res)
-            enqueueSnackbar(`${res.data.message}`, { variant: "success" });
+            console.log(res);
+            enqueueSnackbar(`${res.data.message}`, {variant: "success"});
             router.push("/dashboard/products");
           }
         })
         .catch((err) => {
-          enqueueSnackbar(`${err.response.data}`, { variant:"error"})
-        }
-        );
-    },
+          enqueueSnackbar(`${err.response.data}`, {variant: "error"});
+        });
+    }
   });
   useEffect(() => {
     formik.values.category = category;
@@ -180,7 +179,7 @@ const page = () => {
                 backgroundPosition: "center center",
                 backgroundSize: "cover",
                 boxShadow: "0px 0px 10px gray",
-                borderRadius: "20px",
+                borderRadius: "20px"
               }}
             ></Box>
             <Box
@@ -215,7 +214,7 @@ const page = () => {
             </Box>
           </Grid>
           {/* rigth side informiton side  */}
-          <Grid item xs={12} md={9} sx={{ my: "10px" }}>
+          <Grid item xs={12} md={9} sx={{my: "10px"}}>
             <Typography
               variant="h4"
               textTransform={"capitalize"}
@@ -269,10 +268,11 @@ const page = () => {
                         }
                       >
                         {categoryList?.map((x) => (
-                          <MenuItem key={x._id} value={x._id}>
-                            {x.title}{" "}
-                          </MenuItem>
+                            <MenuItem key={x._id} value={x._id}>
+                              {x.title}{" "}
+                            </MenuItem>
                         ))}
+                              <AddCategory title={"ADD CATEGORY"} />
                       </Select>
                     </FormControl>
                   </Box>{" "}
@@ -294,6 +294,8 @@ const page = () => {
                             {x.title}
                           </MenuItem>
                         ))}
+                        <AddCategory title={"Add Brand " }/>
+
                       </Select>
                     </FormControl>
                   </Box>{" "}
@@ -338,14 +340,14 @@ const page = () => {
                     sx={{
                       display: "flex",
                       // justifyContent: "space-between",
-                      alignItems: "center",
+                      alignItems: "center"
                     }}
                   >
                     <Box
                       sx={{
                         display: "flex",
                         justifyContent: "center",
-                        alignItems: "center",
+                        alignItems: "center"
                       }}
                     >
                       <InputLabel id="offer">Offer </InputLabel>
@@ -365,7 +367,7 @@ const page = () => {
                     sx={{
                       display: "flex",
                       // justifyContent: "center",
-                      alignItems: "center",
+                      alignItems: "center"
                     }}
                   >
                     <InputLabel id="_isShowe">Showe </InputLabel>
@@ -383,7 +385,7 @@ const page = () => {
                     md={3}
                     sx={{
                       display: "flex",
-                      alignItems: "center",
+                      alignItems: "center"
                     }}
                   >
                     <InputLabel id="statue">statue </InputLabel>
@@ -397,14 +399,14 @@ const page = () => {
                   </Grid>
                 </Box>
 
-                <List sx={{ py: "20px" }}>
+                <List sx={{py: "20px"}}>
                   {ps?.map((x, index) => (
                     <ListItem
                       key={index}
                       sx={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "10px",
+                        gap: "10px"
                       }}
                     >
                       <TextField name="size" label="Size" value={x.size} />
@@ -432,7 +434,7 @@ const page = () => {
                   ))}
                 </List>
                 <ListItem
-                  sx={{ display: "flex", alignItems: "center", gap: "10px" }}
+                  sx={{display: "flex", alignItems: "center", gap: "10px"}}
                 >
                   {/* <TextField
                     name="size"
@@ -446,18 +448,18 @@ const page = () => {
                     <FormControl fullWidth>
                       <InputLabel id="brands">Size</InputLabel>
                       <Select
-                      name="size"
+                        name="size"
                         fullWidth
                         labelId="size"
                         id="size"
-                        value={priceSize.size }
+                        value={priceSize.size}
                         label="size"
                         onChange={(e) => {
                           valuesPrice(e);
                         }}
-                          >
+                      >
                         <MenuItem value={0}>select size </MenuItem>
-                        {sizeList?.map((x , index) => (
+                        {sizeList?.map((x, index) => (
                           <MenuItem key={index} value={x.title}>
                             {x.title}
                           </MenuItem>
@@ -501,7 +503,7 @@ const page = () => {
                   </Button>
                 </ListItem>
                 <Grid item xs={12} md={8} py={3}>
-                  <label style={{ margin: "10px 0px", display: "block" }}>
+                  <label style={{margin: "10px 0px", display: "block"}}>
                     Descrption:-
                   </label>
                   <textarea

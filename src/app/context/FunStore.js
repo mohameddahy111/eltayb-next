@@ -18,6 +18,8 @@ export const FunStoreProvider = ({children}) => {
   const [pagination, setPagination] = useState("");
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [swiperList, setSwiperList] = useState([])
+
 
   // useEffect(() => {
   //   if (typeof window !== "undefined") {
@@ -36,11 +38,18 @@ export const FunStoreProvider = ({children}) => {
       : setWishList(null);
   }, [getCookie("wishlist")]);
 
-  const getProducts = async () => {
-    "use client";
+  const getSwiperList = async () => {
+    await axios.get(`${basicUrl}/product/swiper`).then((res) => {
+      setSwiperList(res.data.product)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
 
+  const getProducts = async (page) => {
+    "use client";
     await axios
-      .get(`${basicUrl}/product`)
+      .get(`${basicUrl}/product?page=${page ? page :1}`)
       .then((res) => {
         if (res.status === 200) {
           setProducts({data: res.data.data, page: res.data.page});
@@ -291,7 +300,7 @@ closeSnackbar()
         correctCartItems,
         orders,
         setOrders,
-        getOrders
+        getOrders,getSwiperList,setSwiperList ,swiperList
       }}
     >
       {children}

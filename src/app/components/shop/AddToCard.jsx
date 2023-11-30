@@ -1,8 +1,8 @@
 "use client";
 
-import { StoreFun } from "@/app/context/FunStore";
-import { Add, AddShoppingCart, Close, Remove } from "@mui/icons-material";
-import { LoadingButton } from "@mui/lab";
+import {StoreFun} from "@/app/context/FunStore";
+import {Add, AddShoppingCart, Close, Remove} from "@mui/icons-material";
+import {LoadingButton} from "@mui/lab";
 import {
   Box,
   Button,
@@ -19,14 +19,14 @@ import {
   Select,
   TextField,
   Tooltip,
-  Typography,
+  Typography
 } from "@mui/material";
-import { useSnackbar } from "notistack";
-import React, { useState } from "react";
+import {useSnackbar} from "notistack";
+import React, {useState} from "react";
 
-export default function AddToCard({ icon, data, color }) {
-  const { addItemToCart } = StoreFun();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+export default function AddToCard({icon, data, color}) {
+  const {addItemToCart} = StoreFun();
+  const {enqueueSnackbar, closeSnackbar} = useSnackbar();
   const [open, setOpen] = useState(false);
   const [size, setSize] = useState("small");
   const [quantity, setQuantity] = useState(1);
@@ -36,7 +36,7 @@ export default function AddToCard({ icon, data, color }) {
   const item = {
     productId: data._id,
     size,
-    quantity,
+    quantity
   };
 
   const incormit = (oop) => {
@@ -44,7 +44,7 @@ export default function AddToCard({ icon, data, color }) {
     if (oop === "remove") {
       if (quantity < 1) {
         enqueueSnackbar("quantity must be greater than zero", {
-          variant: "error",
+          variant: "error"
         });
         setQuantity(1);
 
@@ -59,28 +59,27 @@ export default function AddToCard({ icon, data, color }) {
 
   return (
     <React.Fragment>
-      <Tooltip title="Add to Cart">
-        {icon ? (
-          <IconButton
-            onClick={() => setOpen(true)}
-            disabled={data.statue ? false : true}
-          >
+      {icon ? (
+        <IconButton
+          onClick={() => setOpen(true)}
+          disabled={data.statue ? false : true}
+        >
+          <Tooltip title="Add to Cart">
             <AddShoppingCart />
-          </IconButton>
-        ) : (
-          <Button
-            fullWidth
-            sx={{ bgcolor: color && `${color}`, color: color && "#fff" }}
-            variant="contained"
-            onClick={() => setOpen(true)}
-            startIcon={<AddShoppingCart />}
-            disabled={data.statue ? false : true}
-            >
-              {data.statue ? " Add to cart" : 'not available'}
-           
-          </Button>
-        )}
-      </Tooltip>
+          </Tooltip>
+        </IconButton>
+      ) : (
+        <Button
+          fullWidth
+          sx={{bgcolor: color && `${color}`, color: color && "#fff"}}
+          variant="contained"
+          onClick={() => setOpen(true)}
+          startIcon={<AddShoppingCart />}
+          disabled={data.statue ? false : true}
+        >
+          {data.statue ? " Add to cart" : "not available"}
+        </Button>
+      )}
       <Dialog open={open} onClose={closeHandler} fullWidth>
         <Box
           px={3}
@@ -134,7 +133,7 @@ export default function AddToCard({ icon, data, color }) {
                                 <Typography>{x.size}</Typography>
                                 <Typography>
                                   {x.offer_value > 0 && (
-                                    <span style={{ color: "green" }}>
+                                    <span style={{color: "green"}}>
                                       {" "}
                                       save {x.offer_value} %{" "}
                                     </span>
@@ -152,7 +151,7 @@ export default function AddToCard({ icon, data, color }) {
                 </ListItem>
                 <ListItem>
                   <LoadingButton
-                    sx={{ mr: "5px" }}
+                    sx={{mr: "5px"}}
                     variant="contained"
                     onClick={() => {
                       incormit("remove");
@@ -167,10 +166,10 @@ export default function AddToCard({ icon, data, color }) {
                     }}
                     size="small"
                     value={+quantity < 0 ? 1 : quantity}
-                    inputProps={{ type: "number" }}
+                    inputProps={{type: "number"}}
                   />
                   <LoadingButton
-                    sx={{ ml: "5px" }}
+                    sx={{ml: "5px"}}
                     variant="contained"
                     onClick={() => {
                       incormit("add");

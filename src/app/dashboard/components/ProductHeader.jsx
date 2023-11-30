@@ -33,7 +33,7 @@ export default function ProductHeader() {
             </Link>
             <AddCategory title={"ADD CATEGORY" }/>
             <AddCategory title={"Add Brand " }/>
-            {/* <Button>Add product </Button> */}
+            {/* <Button>Add product </Button> */} 
           </ButtonGroup>
         </Box>
       </Box>
