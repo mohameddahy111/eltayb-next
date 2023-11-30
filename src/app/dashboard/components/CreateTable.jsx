@@ -77,7 +77,6 @@ export default function CreateTable({ data }) {
               </TableRow>
             ))}
           </TableBody>
-          <TableFooter></TableFooter>
         </Table>
       </TableContainer>
     </>

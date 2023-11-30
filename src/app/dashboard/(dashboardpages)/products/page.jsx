@@ -6,6 +6,7 @@ import { Box } from "@mui/material";
 import axios from "axios";
 import { Store } from "@/app/context/DataStore";
 import Loading from "@/app/loading";
+import Pages from "@/app/components/Pages";
 
 
 
@@ -15,13 +16,13 @@ export default  function page() {
   const [products , setProducts]=useState([])
   const [loading, setLoading] = useState(true);
 
-  const getProducts = async()=>{
-    await axios.get(`${basicUrl}/product`).then((res)=>{
-      console.log(res.data)
+  const getProducts = async(page)=>{
+    await axios.get(`${basicUrl}/product?page=${page||1}`).then((res)=>{
       setLoading(false)
       setProducts(res.data)
     }).catch((err)=>{
       setLoading(false)
+      console.log(err)
 
     })
 
@@ -35,8 +36,9 @@ export default  function page() {
         <>
       <ProductHeader />
       <Box>
-        <CreateTable data={products}  />
+        <CreateTable data={products}   />
       </Box>
+      <Pages data={products.page} fundo={getProducts}/>
 
         </>
       )}
